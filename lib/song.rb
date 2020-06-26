@@ -1,6 +1,8 @@
 require_relative "../config/environment.rb"
 require 'active_support/inflector'
 
+
+# Note: Using String interpolation for a SQL query creates a SQL injection vulnerability, which we've previously stated is a bad idea as it creates a security issue, however, we're using these examples to illustrate how dynamic ORMs work.
 class Song
 
 
