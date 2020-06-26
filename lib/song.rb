@@ -15,8 +15,8 @@ class Song
 
     table_info = DB[:conn].execute(sql)
     column_names = []
-    table_info.each do |row|
-      column_names << row["name"]
+    table_info.each do |column|
+      column_names << column["name"]
     end
     column_names.compact
   end
@@ -31,9 +31,14 @@ class Song
     end
   end
 
+  # def save
+  #   sql = "INSERT INTO #{table_name_for_insert} (#{col_names_for_insert}) VALUES (#{values_for_insert})"
+  #   DB[:conn].execute(sql)
+  #   @id = DB[:conn].execute("SELECT last_insert_rowid() FROM #{table_name_for_insert}")[0][0]
+  # end
   def save
-    sql = "INSERT INTO #{table_name_for_insert} (#{col_names_for_insert}) VALUES (#{values_for_insert})"
-    DB[:conn].execute(sql)
+    DB[:conn].execute("INSERT INTO #{table_name_for_insert} (#{col_names_for_insert}) VALUES (?)", [values_for_insert])
+   
     @id = DB[:conn].execute("SELECT last_insert_rowid() FROM #{table_name_for_insert}")[0][0]
   end
 
@@ -53,10 +58,14 @@ class Song
     self.class.column_names.delete_if {|col| col == "id"}.join(", ")
   end
 
+  # def self.find_by_name(name)
+  #   sql = "SELECT * FROM #{self.table_name} WHERE name = '#{name}'"
+  #   DB[:conn].execute(sql)
+  # end
   def self.find_by_name(name)
-    sql = "SELECT * FROM #{self.table_name} WHERE name = '#{name}'"
-    DB[:conn].execute(sql)
+    DB[:conn].execute("SELECT * FROM #{self.table_name} WHERE name = ?", [name])
   end
+  
 
 end
 
